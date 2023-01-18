@@ -2,6 +2,20 @@ version: "3.7"
 
 services:
 
+  api-gateway:
+    container_name: api-gateway
+    image: alexbnicolae/api-gateway
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    links:
+      - email-service-app
+      - post-service-app
+    networks:
+      - public
+      - infrastucture
+
   post-service-app: #This is the name of our Nextjs application.
     container_name: post-service-app
     image: alexbnicolae/post-service-app
@@ -44,10 +58,11 @@ services:
         target: /etc/rabbitmq/rabbitmq-defs.json
 
   email-service-app:
-    container_name: email-service-app
+    # container_name: email-service-app
     image: georgeoprian/email-service-app
+    scale: 2
     ports:
-      - "127.0.0.1:8082:8080"
+      - "127.0.0.1:8082-8083:8080"
     networks:
       - public
       - infrastucture
